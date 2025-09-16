@@ -28,10 +28,6 @@ namespace be_windows_cleaners.Repository
                 .ToListAsync();
         }
 
-        public async Task<Image?> GetImageByIdAsync(int id)
-        {
-            return await _context.Images.FindAsync(id);
-        }
 
         public async Task<Image> AddImageAsync(Image image)
         {
@@ -40,10 +36,14 @@ namespace be_windows_cleaners.Repository
             return image;
         }
 
-        public async Task<bool> DeleteImageAsync(int id)
+        public async Task<bool> DeleteImageAsync(int id, int userId)
         {
             var image = await _context.Images.FindAsync(id);
             if (image == null)
+                return false;
+
+            // Check if the user owns the image
+            if (image.UserId != userId)
                 return false;
 
             _context.Images.Remove(image);

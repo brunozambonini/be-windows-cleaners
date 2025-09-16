@@ -44,19 +44,6 @@ namespace be_windows_cleaners.Services
             }
         }
 
-        public async Task<Image?> GetImageByIdAsync(int id)
-        {
-            try
-            {
-                return await _imageRepository.GetImageByIdAsync(id);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error retrieving image with ID {Id}", id);
-                throw;
-            }
-        }
-
         public async Task<Image> AddImageFromFileAsync(string title, IFormFile imageFile, int userId)
         {
             try
@@ -90,56 +77,29 @@ namespace be_windows_cleaners.Services
             }
         }
 
-        public async Task<bool> DeleteImageAsync(int id)
-        {
-            try
-            {
-                var result = await _imageRepository.DeleteImageAsync(id);
-                
-                if (result)
-                {
-                    _logger.LogInformation("Image with ID {Id} was deleted", id);
-                }
-                else
-                {
-                    _logger.LogWarning("Attempt to delete non-existent image with ID {Id}", id);
-                }
-                
-                return result;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error deleting image with ID {Id}", id);
-                throw;
-            }
-        }
-
         public async Task<bool> DeleteImageByUserAsync(int id, int userId)
         {
             try
             {
-                // First, verify that the image exists and belongs to the user
-                var image = await _imageRepository.GetImageByIdAsync(id);
+                // Check if image exists
+                var imageExists = await _imageRepository.ImageExistsAsync(id);
                 
-                if (image == null)
+                if (!imageExists)
                 {
                     _logger.LogWarning("Attempt to delete non-existent image with ID {Id}", id);
                     return false;
                 }
 
-                if (image.UserId != userId)
-                {
-                    _logger.LogWarning("User {UserId} attempted to delete image {ImageId} owned by user {ImageOwnerId}", 
-                        userId, id, image.UserId);
-                    return false;
-                }
-
-                // If ownership is verified, proceed with deletion
-                var result = await _imageRepository.DeleteImageAsync(id);
+                // Try to delete the image - the repository will handle ownership verification
+                var result = await _imageRepository.DeleteImageAsync(id, userId);
                 
                 if (result)
                 {
                     _logger.LogInformation("Image with ID {Id} was deleted by user {UserId}", id, userId);
+                }
+                else
+                {
+                    _logger.LogWarning("User {UserId} attempted to delete image {ImageId} but deletion failed", userId, id);
                 }
                 
                 return result;

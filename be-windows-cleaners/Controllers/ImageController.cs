@@ -45,29 +45,6 @@ namespace be_windows_cleaners.Controllers
             }
         }
 
-        /// <summary>
-        /// Gets a specific image by ID
-        /// </summary>
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Image>> GetImage(int id)
-        {
-            try
-            {
-                var image = await _imageService.GetImageByIdAsync(id);
-
-                if (image == null)
-                {
-                    return NotFound($"Image with ID {id} not found");
-                }
-
-                return Ok(image);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error retrieving image with ID {Id}", id);
-                return StatusCode(500, "Error retrieving image");
-            }
-        }
 
         /// <summary>
         /// Adds a new image via file upload
@@ -83,7 +60,7 @@ namespace be_windows_cleaners.Controllers
                 }
 
                 var image = await _imageService.AddImageFromFileAsync(request.Title, request.ImageFile, request.UserId);
-                return CreatedAtAction(nameof(GetImage), new { id = image.Id }, image);
+                return CreatedAtAction(nameof(GetImages), new { id = image.Id }, image);
             }
             catch (ArgumentException ex)
             {
@@ -112,16 +89,7 @@ namespace be_windows_cleaners.Controllers
 
                 if (!deleted)
                 {
-                    // Check if image exists to provide appropriate error message
-                    var image = await _imageService.GetImageByIdAsync(id);
-                    if (image == null)
-                    {
-                        return NotFound($"Image with ID {id} not found");
-                    }
-                    else
-                    {
-                        return Forbid($"You don't have permission to delete this image. Image belongs to user {image.UserId}");
-                    }
+                    return NotFound($"Image with ID {id} not found or you don't have permission to delete it");
                 }
 
                 return NoContent();

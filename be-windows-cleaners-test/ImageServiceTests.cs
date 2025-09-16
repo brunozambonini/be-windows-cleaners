@@ -127,66 +127,6 @@ namespace be_windows_cleaners_test
 
         #endregion
 
-        #region GetImageByIdAsync Tests
-
-        [Fact]
-        public async Task GetImageByIdAsync_ShouldReturnImage_WhenImageExists()
-        {
-            // Arrange
-            var imageId = 1;
-            var expectedImage = new Image 
-            { 
-                Id = imageId, 
-                Title = "Test Image", 
-                ImageData = "base64data", 
-                Created_At = DateTime.UtcNow,
-                UserId = 1
-            };
-
-            _mockImageRepository.Setup(x => x.GetImageByIdAsync(imageId))
-                .ReturnsAsync(expectedImage);
-
-            // Act
-            var result = await _imageService.GetImageByIdAsync(imageId);
-
-            // Assert
-            result.Should().NotBeNull();
-            result.Should().BeEquivalentTo(expectedImage);
-            _mockImageRepository.Verify(x => x.GetImageByIdAsync(imageId), Times.Once);
-        }
-
-        [Fact]
-        public async Task GetImageByIdAsync_ShouldReturnNull_WhenImageDoesNotExist()
-        {
-            // Arrange
-            var imageId = 999;
-            _mockImageRepository.Setup(x => x.GetImageByIdAsync(imageId))
-                .ReturnsAsync((Image?)null);
-
-            // Act
-            var result = await _imageService.GetImageByIdAsync(imageId);
-
-            // Assert
-            result.Should().BeNull();
-            _mockImageRepository.Verify(x => x.GetImageByIdAsync(imageId), Times.Once);
-        }
-
-        [Fact]
-        public async Task GetImageByIdAsync_ShouldThrowException_WhenRepositoryThrowsException()
-        {
-            // Arrange
-            var imageId = 1;
-            var exception = new Exception("Database error");
-            _mockImageRepository.Setup(x => x.GetImageByIdAsync(imageId))
-                .ThrowsAsync(exception);
-
-            // Act & Assert
-            var thrownException = await Assert.ThrowsAsync<Exception>(() => _imageService.GetImageByIdAsync(imageId));
-            thrownException.Message.Should().Be("Database error");
-            _mockImageRepository.Verify(x => x.GetImageByIdAsync(imageId), Times.Once);
-        }
-
-        #endregion
 
         #region AddImageFromFileAsync Tests
 
@@ -301,57 +241,6 @@ namespace be_windows_cleaners_test
 
         #endregion
 
-        #region DeleteImageAsync Tests
-
-        [Fact]
-        public async Task DeleteImageAsync_ShouldReturnTrue_WhenImageExists()
-        {
-            // Arrange
-            var imageId = 1;
-            _mockImageRepository.Setup(x => x.DeleteImageAsync(imageId))
-                .ReturnsAsync(true);
-
-            // Act
-            var result = await _imageService.DeleteImageAsync(imageId);
-
-            // Assert
-            result.Should().BeTrue();
-            _mockImageRepository.Verify(x => x.DeleteImageAsync(imageId), Times.Once);
-        }
-
-        [Fact]
-        public async Task DeleteImageAsync_ShouldReturnFalse_WhenImageDoesNotExist()
-        {
-            // Arrange
-            var imageId = 999;
-            _mockImageRepository.Setup(x => x.DeleteImageAsync(imageId))
-                .ReturnsAsync(false);
-
-            // Act
-            var result = await _imageService.DeleteImageAsync(imageId);
-
-            // Assert
-            result.Should().BeFalse();
-            _mockImageRepository.Verify(x => x.DeleteImageAsync(imageId), Times.Once);
-        }
-
-        [Fact]
-        public async Task DeleteImageAsync_ShouldThrowException_WhenRepositoryThrowsException()
-        {
-            // Arrange
-            var imageId = 1;
-            var exception = new Exception("Database error");
-            _mockImageRepository.Setup(x => x.DeleteImageAsync(imageId))
-                .ThrowsAsync(exception);
-
-            // Act & Assert
-            var thrownException = await Assert.ThrowsAsync<Exception>(() => _imageService.DeleteImageAsync(imageId));
-            thrownException.Message.Should().Be("Database error");
-            _mockImageRepository.Verify(x => x.DeleteImageAsync(imageId), Times.Once);
-        }
-
-        #endregion
-
         #region DeleteImageByUserAsync Tests
 
         [Fact]
@@ -360,11 +249,10 @@ namespace be_windows_cleaners_test
             // Arrange
             var imageId = 1;
             var userId = 1;
-            var image = new Image { Id = imageId, UserId = userId, Title = "Test Image", ImageData = "base64data" };
 
-            _mockImageRepository.Setup(x => x.GetImageByIdAsync(imageId))
-                .ReturnsAsync(image);
-            _mockImageRepository.Setup(x => x.DeleteImageAsync(imageId))
+            _mockImageRepository.Setup(x => x.ImageExistsAsync(imageId))
+                .ReturnsAsync(true);
+            _mockImageRepository.Setup(x => x.DeleteImageAsync(imageId, userId))
                 .ReturnsAsync(true);
 
             // Act
@@ -372,8 +260,8 @@ namespace be_windows_cleaners_test
 
             // Assert
             result.Should().BeTrue();
-            _mockImageRepository.Verify(x => x.GetImageByIdAsync(imageId), Times.Once);
-            _mockImageRepository.Verify(x => x.DeleteImageAsync(imageId), Times.Once);
+            _mockImageRepository.Verify(x => x.ImageExistsAsync(imageId), Times.Once);
+            _mockImageRepository.Verify(x => x.DeleteImageAsync(imageId, userId), Times.Once);
         }
 
         [Fact]
@@ -383,16 +271,16 @@ namespace be_windows_cleaners_test
             var imageId = 999;
             var userId = 1;
 
-            _mockImageRepository.Setup(x => x.GetImageByIdAsync(imageId))
-                .ReturnsAsync((Image?)null);
+            _mockImageRepository.Setup(x => x.ImageExistsAsync(imageId))
+                .ReturnsAsync(false);
 
             // Act
             var result = await _imageService.DeleteImageByUserAsync(imageId, userId);
 
             // Assert
             result.Should().BeFalse();
-            _mockImageRepository.Verify(x => x.GetImageByIdAsync(imageId), Times.Once);
-            _mockImageRepository.Verify(x => x.DeleteImageAsync(It.IsAny<int>()), Times.Never);
+            _mockImageRepository.Verify(x => x.ImageExistsAsync(imageId), Times.Once);
+            _mockImageRepository.Verify(x => x.DeleteImageAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
 
         [Fact]
@@ -401,19 +289,19 @@ namespace be_windows_cleaners_test
             // Arrange
             var imageId = 1;
             var userId = 1;
-            var imageOwnerId = 2;
-            var image = new Image { Id = imageId, UserId = imageOwnerId, Title = "Test Image", ImageData = "base64data" };
 
-            _mockImageRepository.Setup(x => x.GetImageByIdAsync(imageId))
-                .ReturnsAsync(image);
+            _mockImageRepository.Setup(x => x.ImageExistsAsync(imageId))
+                .ReturnsAsync(true);
+            _mockImageRepository.Setup(x => x.DeleteImageAsync(imageId, userId))
+                .ReturnsAsync(false); // Repository returns false when user doesn't own image
 
             // Act
             var result = await _imageService.DeleteImageByUserAsync(imageId, userId);
 
             // Assert
             result.Should().BeFalse();
-            _mockImageRepository.Verify(x => x.GetImageByIdAsync(imageId), Times.Once);
-            _mockImageRepository.Verify(x => x.DeleteImageAsync(It.IsAny<int>()), Times.Never);
+            _mockImageRepository.Verify(x => x.ImageExistsAsync(imageId), Times.Once);
+            _mockImageRepository.Verify(x => x.DeleteImageAsync(imageId, userId), Times.Once);
         }
 
         [Fact]
@@ -424,13 +312,13 @@ namespace be_windows_cleaners_test
             var userId = 1;
             var exception = new Exception("Database error");
 
-            _mockImageRepository.Setup(x => x.GetImageByIdAsync(imageId))
+            _mockImageRepository.Setup(x => x.ImageExistsAsync(imageId))
                 .ThrowsAsync(exception);
 
             // Act & Assert
             var thrownException = await Assert.ThrowsAsync<Exception>(() => _imageService.DeleteImageByUserAsync(imageId, userId));
             thrownException.Message.Should().Be("Database error");
-            _mockImageRepository.Verify(x => x.GetImageByIdAsync(imageId), Times.Once);
+            _mockImageRepository.Verify(x => x.ImageExistsAsync(imageId), Times.Once);
         }
 
         #endregion

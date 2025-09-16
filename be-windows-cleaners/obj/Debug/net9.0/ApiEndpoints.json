@@ -6,7 +6,13 @@
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.IEnumerable\u00601[[be_windows_cleaners.Models.Image, be-windows-cleaners, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
@@ -21,16 +27,57 @@
   },
   {
     "ContainingType": "be_windows_cleaners.Controllers.ImageController",
-    "Method": "AddImage",
-    "RelativePath": "api/Image",
+    "Method": "DeleteImage",
+    "RelativePath": "api/Image/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "be_windows_cleaners.Controllers.ImageController",
+    "Method": "ResetDatabase",
+    "RelativePath": "api/Image/reset-db",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "be_windows_cleaners.Controllers.ImageController",
+    "Method": "UploadImage",
+    "RelativePath": "api/Image/upload",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "request",
-        "Type": "be_windows_cleaners.Controllers.CreateImageRequest",
-        "IsRequired": true
+        "Name": "Title",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ImageFile",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "UserId",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -46,9 +93,55 @@
     ]
   },
   {
-    "ContainingType": "be_windows_cleaners.Controllers.ImageController",
-    "Method": "GetImage",
-    "RelativePath": "api/Image/{id}",
+    "ContainingType": "be_windows_cleaners.Controllers.UserController",
+    "Method": "GetUsers",
+    "RelativePath": "api/User",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[be_windows_cleaners.Models.UserResponse, be-windows-cleaners, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "be_windows_cleaners.Controllers.UserController",
+    "Method": "CreateUser",
+    "RelativePath": "api/User",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "be_windows_cleaners.Models.CreateUserRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "be_windows_cleaners.Models.UserResponse",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "be_windows_cleaners.Controllers.UserController",
+    "Method": "GetUser",
+    "RelativePath": "api/User/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -61,7 +154,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "be_windows_cleaners.Models.Image",
+        "Type": "be_windows_cleaners.Models.UserResponse",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -72,9 +165,40 @@
     ]
   },
   {
-    "ContainingType": "be_windows_cleaners.Controllers.ImageController",
-    "Method": "DeleteImage",
-    "RelativePath": "api/Image/{id}",
+    "ContainingType": "be_windows_cleaners.Controllers.UserController",
+    "Method": "UpdateUser",
+    "RelativePath": "api/User/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "be_windows_cleaners.Models.UpdateUserRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "be_windows_cleaners.Models.UserResponse",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "be_windows_cleaners.Controllers.UserController",
+    "Method": "DeleteUser",
+    "RelativePath": "api/User/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,

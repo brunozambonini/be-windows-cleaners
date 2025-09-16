@@ -93,73 +93,6 @@ namespace be_windows_cleaners_test
 
         #endregion
 
-        #region GetImage Tests
-
-        [Fact]
-        public async Task GetImage_ShouldReturnImage_WhenImageExists()
-        {
-            // Arrange
-            var imageId = 1;
-            var expectedImage = new Image 
-            { 
-                Id = imageId, 
-                Title = "Test Image", 
-                ImageData = "base64data", 
-                Created_At = DateTime.UtcNow,
-                UserId = 1
-            };
-
-            _mockImageService.Setup(x => x.GetImageByIdAsync(imageId))
-                .ReturnsAsync(expectedImage);
-
-            // Act
-            var result = await _controller.GetImage(imageId);
-
-            // Assert
-            result.Result.Should().BeOfType<OkObjectResult>();
-            var okResult = result.Result as OkObjectResult;
-            okResult!.Value.Should().BeEquivalentTo(expectedImage);
-            _mockImageService.Verify(x => x.GetImageByIdAsync(imageId), Times.Once);
-        }
-
-        [Fact]
-        public async Task GetImage_ShouldReturnNotFound_WhenImageDoesNotExist()
-        {
-            // Arrange
-            var imageId = 999;
-            _mockImageService.Setup(x => x.GetImageByIdAsync(imageId))
-                .ReturnsAsync((Image?)null);
-
-            // Act
-            var result = await _controller.GetImage(imageId);
-
-            // Assert
-            result.Result.Should().BeOfType<NotFoundObjectResult>();
-            var notFoundResult = result.Result as NotFoundObjectResult;
-            notFoundResult!.Value.Should().Be($"Image with ID {imageId} not found");
-            _mockImageService.Verify(x => x.GetImageByIdAsync(imageId), Times.Once);
-        }
-
-        [Fact]
-        public async Task GetImage_ShouldReturnInternalServerError_WhenServiceThrowsException()
-        {
-            // Arrange
-            var imageId = 1;
-            var exception = new Exception("Database error");
-            _mockImageService.Setup(x => x.GetImageByIdAsync(imageId))
-                .ThrowsAsync(exception);
-
-            // Act
-            var result = await _controller.GetImage(imageId);
-
-            // Assert
-            result.Result.Should().BeOfType<ObjectResult>();
-            var objectResult = result.Result as ObjectResult;
-            objectResult!.StatusCode.Should().Be(500);
-            objectResult.Value.Should().Be("Error retrieving image");
-        }
-
-        #endregion
 
         #region UploadImage Tests
 
@@ -192,7 +125,7 @@ namespace be_windows_cleaners_test
             // Assert
             result.Result.Should().BeOfType<CreatedAtActionResult>();
             var createdResult = result.Result as CreatedAtActionResult;
-            createdResult!.ActionName.Should().Be(nameof(ImageController.GetImage));
+            createdResult!.ActionName.Should().Be(nameof(ImageController.GetImages));
             createdResult.RouteValues!["id"].Should().Be(expectedImage.Id);
             createdResult.Value.Should().BeEquivalentTo(expectedImage);
             _mockImageService.Verify(x => x.AddImageFromFileAsync(request.Title, request.ImageFile, request.UserId), Times.Once);
@@ -323,8 +256,6 @@ namespace be_windows_cleaners_test
 
             _mockImageService.Setup(x => x.DeleteImageByUserAsync(imageId, userId))
                 .ReturnsAsync(false);
-            _mockImageService.Setup(x => x.GetImageByIdAsync(imageId))
-                .ReturnsAsync((Image?)null);
 
             // Act
             var result = await _controller.DeleteImage(imageId, userId);
@@ -332,32 +263,28 @@ namespace be_windows_cleaners_test
             // Assert
             result.Should().BeOfType<NotFoundObjectResult>();
             var notFoundResult = result as NotFoundObjectResult;
-            notFoundResult!.Value.Should().Be($"Image with ID {imageId} not found");
+            notFoundResult!.Value.Should().Be($"Image with ID {imageId} not found or you don't have permission to delete it");
             _mockImageService.Verify(x => x.DeleteImageByUserAsync(imageId, userId), Times.Once);
-            _mockImageService.Verify(x => x.GetImageByIdAsync(imageId), Times.Once);
         }
 
         [Fact]
-        public async Task DeleteImage_ShouldReturnForbid_WhenUserDoesNotOwnImage()
+        public async Task DeleteImage_ShouldReturnNotFound_WhenUserDoesNotOwnImage()
         {
             // Arrange
             var imageId = 1;
             var userId = 1;
-            var imageOwnerId = 2;
-            var image = new Image { Id = imageId, UserId = imageOwnerId, Title = "Test Image", ImageData = "base64data" };
 
             _mockImageService.Setup(x => x.DeleteImageByUserAsync(imageId, userId))
                 .ReturnsAsync(false);
-            _mockImageService.Setup(x => x.GetImageByIdAsync(imageId))
-                .ReturnsAsync(image);
 
             // Act
             var result = await _controller.DeleteImage(imageId, userId);
 
             // Assert
-            result.Should().BeOfType<ForbidResult>();
+            result.Should().BeOfType<NotFoundObjectResult>();
+            var notFoundResult = result as NotFoundObjectResult;
+            notFoundResult!.Value.Should().Be($"Image with ID {imageId} not found or you don't have permission to delete it");
             _mockImageService.Verify(x => x.DeleteImageByUserAsync(imageId, userId), Times.Once);
-            _mockImageService.Verify(x => x.GetImageByIdAsync(imageId), Times.Once);
         }
 
         [Fact]
