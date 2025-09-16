@@ -1,0 +1,98 @@
+### User API Examples
+### Base URL: https://localhost:7000/api/user
+
+### 1. Get all users
+GET https://localhost:7000/api/user
+Content-Type: application/json
+
+###
+
+### 2. Get user by ID
+GET https://localhost:7000/api/user/1
+Content-Type: application/json
+
+###
+
+### 3. Create a new user (Lead)
+POST https://localhost:7000/api/user
+Content-Type: application/json
+
+{
+  "name": "João Silva",
+  "email": "joao.silva@example.com",
+  "password": "senha123",
+  "type": "Lead"
+}
+
+###
+
+### 4. Create a new user (Customer)
+POST https://localhost:7000/api/user
+Content-Type: application/json
+
+{
+  "name": "Maria Santos",
+  "email": "maria.santos@example.com",
+  "password": "senha456",
+  "type": "Customer"
+}
+
+###
+
+### 5. Update user
+PUT https://localhost:7000/api/user/1
+Content-Type: application/json
+
+{
+  "name": "João Silva Atualizado",
+  "email": "joao.silva.novo@example.com",
+  "password": "novaSenha123",
+  "type": "Customer"
+}
+
+###
+
+### 6. Delete user
+DELETE https://localhost:7000/api/user/1
+Content-Type: application/json
+
+###
+
+### 7. Test validation - Invalid email
+POST https://localhost:7000/api/user
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "email": "invalid-email",
+  "password": "senha123",
+  "type": "Lead"
+}
+
+###
+
+### 8. Test validation - Short password
+POST https://localhost:7000/api/user
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "email": "test@example.com",
+  "password": "123",
+  "type": "Lead"
+}
+
+###
+
+### 9. Test validation - Empty name
+POST https://localhost:7000/api/user
+Content-Type: application/json
+
+{
+  "name": "",
+  "email": "test@example.com",
+  "password": "senha123",
+  "type": "Lead"
+}
+
+###

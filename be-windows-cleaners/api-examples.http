@@ -1,0 +1,88 @@
+### Image API Usage Examples
+
+### 1. List all images
+GET http://localhost:8000/api/image
+Content-Type: application/json
+
+###
+
+### 1.1. List images by user ID
+GET http://localhost:8000/api/image?userId=1
+Content-Type: application/json
+
+###
+
+### 2. Get a specific image by ID
+GET http://localhost:8000/api/image/1
+Content-Type: application/json
+
+###
+
+### 3. Add a new image via file upload (RECOMMENDED)
+POST http://localhost:8000/api/image/upload
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="title"
+
+My First Image
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="userId"
+
+1
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="imageFile"; filename="image.jpg"
+Content-Type: image/jpeg
+
+< ./path/to/your/image.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### 3.1. Add a new image via base64 (alternative method)
+POST http://localhost:8000/api/image
+Content-Type: application/json
+
+{
+  "title": "My First Image",
+  "imageData": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
+}
+
+###
+
+### 4. Delete an image by ID (with user ownership verification)
+### 4.1. Delete image with correct user ID (should succeed)
+DELETE http://localhost:8000/api/image/1?userId=1
+Content-Type: application/json
+
+###
+
+### 4.2. Delete image with wrong user ID (should fail with 403 Forbidden)
+DELETE http://localhost:8000/api/image/1?userId=2
+Content-Type: application/json
+
+###
+
+### 4.3. Delete non-existent image (should fail with 404 Not Found)
+DELETE http://localhost:8000/api/image/999?userId=1
+Content-Type: application/json
+
+###
+
+### 5. Reset database (delete all images)
+DELETE http://localhost:8000/api/image/reset-db
+Content-Type: application/json
+
+###
+
+### Notes:
+### - Application configured to run on port 8000
+### - The imageData field must contain a valid base64 string of an image
+### - To convert an image to base64, you can use online tools or code
+### - Example base64 image (1x1 transparent pixel): iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==
+### - LIMIT: Maximum of 10 images per system
+### 
+### ACCESS CONTROL:
+### - DELETE endpoint now requires userId parameter to verify ownership
+### - Only the user who uploaded the image can delete it
+### - Returns 403 Forbidden if user tries to delete another user's image
+### - Returns 404 Not Found if image doesn't exist
+### - Example: DELETE /api/image/1?userId=1 (where 1 is the image owner's ID)

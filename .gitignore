@@ -1,0 +1,12 @@
+# Visual Studio
+.vs/
+*.vscode/
+*.user
+*.suo
+
+# Node
+node_modules/
+
+# Build
+dist/
+out/
