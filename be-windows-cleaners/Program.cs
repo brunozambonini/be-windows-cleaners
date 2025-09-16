@@ -47,7 +47,6 @@ builder.Services.AddScoped<IImageValidators, ImageValidators>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserValidators, UserValidators>();
-builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 

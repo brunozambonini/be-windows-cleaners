@@ -154,3 +154,5 @@ C:\Projects\be-windows-cleaners\be-windows-cleaners\obj\Debug\net9.0\refint\be-w
 C:\Projects\be-windows-cleaners\be-windows-cleaners\obj\Debug\net9.0\be-windows-cleaners.pdb
 C:\Projects\be-windows-cleaners\be-windows-cleaners\obj\Debug\net9.0\be-windows-cleaners.genruntimeconfig.cache
 C:\Projects\be-windows-cleaners\be-windows-cleaners\obj\Debug\net9.0\ref\be-windows-cleaners.dll
+C:\Projects\be-windows-cleaners\be-windows-cleaners\obj\Debug\net9.0\be-windows-cleaners.sourcelink.json
+C:\Projects\be-windows-cleaners\be-windows-cleaners\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt

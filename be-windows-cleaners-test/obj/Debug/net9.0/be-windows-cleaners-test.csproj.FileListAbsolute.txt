@@ -234,3 +234,6 @@ C:\Projects\be-windows-cleaners\be-windows-cleaners-test\obj\Debug\net9.0\refint
 C:\Projects\be-windows-cleaners\be-windows-cleaners-test\obj\Debug\net9.0\be-windows-cleaners-test.pdb
 C:\Projects\be-windows-cleaners\be-windows-cleaners-test\obj\Debug\net9.0\be-windows-cleaners-test.genruntimeconfig.cache
 C:\Projects\be-windows-cleaners\be-windows-cleaners-test\obj\Debug\net9.0\ref\be-windows-cleaners-test.dll
+C:\Projects\be-windows-cleaners\be-windows-cleaners-test\obj\Debug\net9.0\be-windows-cleaners-test.sourcelink.json
+C:\Projects\be-windows-cleaners\be-windows-cleaners-test\bin\Debug\net9.0\FluentAssertions.dll
+C:\Projects\be-windows-cleaners\be-windows-cleaners-test\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.InMemory.dll
