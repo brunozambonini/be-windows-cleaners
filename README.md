@@ -252,7 +252,10 @@ Update `appsettings.json` for your environment:
   }
 }
 ```
-
+### Using
+ - Before upload a new image you must create a user using POST /api/user
+   - Use the id from the created user to create, list and delete images
+  
 ## 📊 Database Schema
 
 ### Users Table
@@ -279,12 +282,14 @@ Use the provided HTTP files for API testing:
 
 ### SCREENSHOTS:
 - Swagger:
-- <img width="1477" height="829" alt="image" src="https://github.com/user-attachments/assets/1f7805e5-38aa-4dd7-b306-10070e76aa21" />
+  <img width="1477" height="829" alt="image" src="https://github.com/user-attachments/assets/1f7805e5-38aa-4dd7-b306-10070e76aa21" />
 
 - Adding image:
-- <img width="1422" height="741" alt="image" src="https://github.com/user-attachments/assets/0c73d4c5-1d1b-44ee-86a8-d5f3d95d9d8f" />
+  <img width="1422" height="741" alt="image" src="https://github.com/user-attachments/assets/0c73d4c5-1d1b-44ee-86a8-d5f3d95d9d8f" />
 
 - Deleting Image:
-- <img width="1433" height="466" alt="image" src="https://github.com/user-attachments/assets/e011bcc8-2996-459d-bcf5-b1def273bcde" />
+<img width="1433" height="466" alt="image" src="https://github.com/user-attachments/assets/e011bcc8-2996-459d-bcf5-b1def273bcde" />
 
+- Adding image after reaching limit of 10 per user
+<img width="1418" height="550" alt="image" src="https://github.com/user-attachments/assets/40dcf376-d912-4c1f-bb23-05881e9b8a03" />
 
