@@ -277,18 +277,14 @@ Use the provided HTTP files for API testing:
 - `api-examples.http` - Image management endpoints
 - `user-api-examples.http` - User management endpoints
 
-## 📝 License
+### SCREENSHOTS:
+- Swagger:
+- <img width="1477" height="829" alt="image" src="https://github.com/user-attachments/assets/1f7805e5-38aa-4dd7-b306-10070e76aa21" />
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+- Adding image:
+- <img width="1422" height="741" alt="image" src="https://github.com/user-attachments/assets/0c73d4c5-1d1b-44ee-86a8-d5f3d95d9d8f" />
 
-## 🤝 Contributing
+- Deleting Image:
+- <img width="1433" height="466" alt="image" src="https://github.com/user-attachments/assets/e011bcc8-2996-459d-bcf5-b1def273bcde" />
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
 
-## 📞 Support
-
-For support and questions, please open an issue in the repository or contact the development team.
